@@ -11,7 +11,7 @@ type FormFooterProps={
 export default function FormFooter({message1,message2,authUrl}:FormFooterProps){
     return(
     <>
-    <div className="mt-6 flex items-center justify-center m-8 gap-3">
+    <div className="mt-4 flex items-center justify-center gap-3">
         <div className="border-t border-[#48484899] w-full"></div>
         <p className="text-gray-600">OR</p>
         <div className="border-t border-[#48484899] w-full"></div>

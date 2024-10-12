@@ -11,7 +11,7 @@ export default function AuthInput ({type}:AuthInputProps){
     return (
         <>
          <div className="mb-4">
-          <label htmlFor="password" className="block mb-2 text-[#484848] ">
+          <label htmlFor="password" className="block mb-2 text-[#484848]">
             {type}
           </label>
           <div className="relative">
