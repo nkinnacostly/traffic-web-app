@@ -10,9 +10,9 @@ import {
 } from "./ui/table";
 
 
-type TransactionProps ={
-    status:string
-}
+// type TransactionProps ={
+//     status:string
+// }
 
 interface TransactionTableData {
     sn: number;
@@ -70,7 +70,7 @@ const customerDemoData: TransactionTableData[] = [
     },
 ];
 
-export default function TransactionTable({status}:TransactionProps) {
+export default function TransactionTable(/*{status}:TransactionProps*/) {
     return (
         <Card className="w-full py-6 px-4 bg-[#F9F9F9] shadow-none border-[#f9f9f9]">
             <>

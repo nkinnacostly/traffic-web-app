@@ -12,7 +12,7 @@ type ProductCardProps = {
     coverImage: string;
 };
 
-export default function ProductCard({ soldNumber, category, productName, favourite, coverImage }: ProductCardProps) {
+export default function ProductCard({ soldNumber, category, productName, favourite}: ProductCardProps) {
     return (
         <div>
         <Card className="relative w-64 overflow-hidden shadow-none">

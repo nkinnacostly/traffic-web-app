@@ -26,7 +26,7 @@ const CreateBusinessLayout: React.FC<CreateBusinessLayoutProps> = ({ children })
 
   return (
     <div className="flex-none md:flex md:h-screen">
-      <Sidebar currentPath={pathname} completedSteps={completedSteps} /> {/* Pass current path and completed steps */}
+      <Sidebar  completedSteps={completedSteps} /> {/* Pass current path and completed steps */}
       <div className="w-full md:w-2/3 p-8">
         {children}
       </div>

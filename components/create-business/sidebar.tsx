@@ -4,11 +4,10 @@ import Image from "next/image";
 import { IoMdCheckmark } from "react-icons/io";
 
 type SideBarProps = {
-  currentPath: string;
   completedSteps: string[];
 };
 
-export const Sidebar = ({ currentPath, completedSteps }: SideBarProps) => {
+export const Sidebar = ({ completedSteps }: SideBarProps) => {
   const steps = [
     { sublabel: "Please provide your business details", label: "Business details", path: "/create-business/step1" },
     { sublabel: "Must be at least 8 characters", label: "Create Password", path: "/create-business/step2" },

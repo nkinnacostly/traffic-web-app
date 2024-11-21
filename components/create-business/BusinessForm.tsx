@@ -2,7 +2,6 @@ import logoVector from "@/public/image/login-vector.png"
 import Image from "next/image"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import Link from "next/link"
 export default function BusinessForm(){
     return (
         <div className="w-full h-full m-0 p-0  md:px-32">
