@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import Traffik_Logo from "@/public/image/traffik__logo.png";
 import authbackgroundcover from "@/public/image/auth-bg.png";
 import logoVector from "@/public/image/login-vector.png";

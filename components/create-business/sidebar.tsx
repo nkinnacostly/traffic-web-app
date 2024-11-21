@@ -1,6 +1,5 @@
-import { cn } from "@/lib/utils"; 
+
 import logoImage from "@/public/image/traffik-logo-black.png"
-import { Label } from "@radix-ui/react-label";
 import Image from "next/image";
 import { IoMdCheckmark } from "react-icons/io";
 

@@ -9,7 +9,7 @@ import {
     TableHeader,
     TableRow 
 } from "./ui/table";
-import { H3, H4, Span } from "./ui/typography";
+import { H3, Span } from "./ui/typography";
 
 interface CustomersDemoDataTypes {
     sn: number;

@@ -1,15 +1,14 @@
 import { Card } from "./ui/card";
-import Link from "next/link";
+
 import { 
     Table,
     TableBody,
     TableCell,
-    TableFooter,
     TableHead,
     TableHeader,
     TableRow 
 } from "./ui/table";
-import { H5, H4, Span } from "./ui/typography";
+
 
 type TransactionProps ={
     status:string

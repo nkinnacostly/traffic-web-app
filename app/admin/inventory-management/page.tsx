@@ -17,7 +17,7 @@ export default function Page(){
                 <StaticCard amount={180000} isDue={true} percentage={3} subTitle="Last 7 days earnings" title="Weekly Revenue" isView={false} showConcurrency={false} hideBage={false} border="none" bgColor="[#fff]"/>
                 <StaticCard amount={180000} isDue={true} percentage={3} subTitle="Last 30 days profits" title="Monthly Profits" isView={false} showConcurrency={false} hideBage={false} border="none" bgColor="[#fff]" />
             </div>
-            <ProgressTrackbar progress={25} />
+            <ProgressTrackbar progress={value} />
             <Tabs defaultValue="all_transaction" className="">
                 <TabsList  className=" gap-5 md:gap-44 bg-white mb-3">
                     <TabsTrigger value="all_transaction">All Transaction</TabsTrigger>

@@ -1,8 +1,6 @@
 import Link from "next/link";
 import FormContainer from "@/components/layout/auth-layout";
-import AuthButton from "@/components/auth-ui/button";
 import FormFooter from "@/components/auth-ui/form-footer";
-import AuthInput from "@/components/auth-ui/input";
 import {Button} from "@/components/ui/button"
 import { Input } from "@/components/ui/input";
 

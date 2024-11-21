@@ -1,4 +1,4 @@
-import Link from "next/link";
+
 import FormContainer from "@/components/layout/auth-layout";
 import FormFooter from "@/components/auth-ui/form-footer";
 import { Input } from "@/components/ui/input";
