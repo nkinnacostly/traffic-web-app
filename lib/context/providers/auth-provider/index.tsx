@@ -4,9 +4,12 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
 interface User {
-  id: string;
-  username: string;
+  _id: string;
+  firstName: string;
+  lastName: string;
   email: string;
+  role: string;
+  isVerified: boolean;
 }
 
 interface AuthContextType {

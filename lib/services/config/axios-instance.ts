@@ -1,6 +1,7 @@
 import axios from "axios";
 
-export const baseURL = process.env.NEXT_PUBLIC_API_URL;
+// Use relative path to leverage Next.js rewrites (avoids CORS)
+export const baseURL = "/api";
 
 const axiosInstance = axios.create({
   baseURL,

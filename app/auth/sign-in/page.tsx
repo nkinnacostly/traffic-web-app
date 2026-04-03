@@ -16,7 +16,7 @@ import { useAuth } from "@/lib/context/providers/auth-provider";
 import useToastAlert from "@/lib/hooks/use-toast-alert";
 
 const loginSchema = z.object({
-  username: z.string().min(1, "Username is required"),
+  email: z.string().email("Invalid email address"),
   password: z.string().min(1, "Password is required"),
 });
 
@@ -41,8 +41,9 @@ const SignIn: React.FC = () => {
     try {
       const response = await login(values as LoginPayload);
 
-      if (response.data.token && response.data.user) {
-        authLogin(response.data.token, response.data.user);
+      if (response.data.token) {
+        const { token, ...userData } = response.data;
+        authLogin(token, userData);
         handleSuccessToast({ description: "Login successful!" });
       }
     } catch (error: any) {
@@ -62,16 +63,14 @@ const SignIn: React.FC = () => {
       >
         <div className="mb-3">
           <Input
-            label="Username"
-            type="text"
-            className={`py-6 border-[#9F9F9F] ${errors.username ? "border-red-500" : ""}`}
-            placeholder="Enter Your Username"
-            {...register("username")}
+            label="Email"
+            type="email"
+            className={`py-6 border-[#9F9F9F] ${errors.email ? "border-red-500" : ""}`}
+            placeholder="Enter Your Email"
+            {...register("email")}
           />
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.username.message}
-            </p>
+          {errors.email && (
+            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
           )}
         </div>
 

@@ -55,7 +55,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="mb-3">
             <p className="text-sm text-gray-400">Logged in as</p>
             <p className="text-sm font-medium truncate">
-              {user?.username || user?.email}
+              {user?.firstName} {user?.lastName}
             </p>
           </div>
           <button

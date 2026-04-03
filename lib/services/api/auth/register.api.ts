@@ -3,17 +3,27 @@ import { AxiosResponse, isAxiosError } from "axios";
 import { ApiResponseType } from "@/lib/types";
 
 export interface RegisterPayload {
-  fullname: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
+  phone: string;
+  role: string;
 }
 
 export interface RegisterResponseData {
-  user: {
-    id: string;
-    fullname: string;
-    email: string;
-  };
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  interests: string[];
+  loginType: string;
+  isVerified: boolean;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  token: string;
 }
 
 type RegisterResponse = ApiResponseType<RegisterResponseData>;
@@ -21,7 +31,7 @@ type RegisterResponse = ApiResponseType<RegisterResponseData>;
 const register = async (data: RegisterPayload): Promise<RegisterResponse> => {
   try {
     const request: AxiosResponse<RegisterResponse> = await axiosInstance.post(
-      "/api/v1/auth/register",
+      "/auth/signup",
       data
     );
     return request.data;

@@ -3,17 +3,18 @@ import { AxiosResponse, isAxiosError } from "axios";
 import { ApiResponseType } from "@/lib/types";
 
 export interface LoginPayload {
-  username: string;
+  email: string;
   password: string;
 }
 
 export interface LoginResponseData {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  isVerified: boolean;
   token: string;
-  user: {
-    id: string;
-    username: string;
-    email: string;
-  };
 }
 
 type LoginResponse = ApiResponseType<LoginResponseData>;
@@ -21,7 +22,7 @@ type LoginResponse = ApiResponseType<LoginResponseData>;
 const login = async (data: LoginPayload): Promise<LoginResponse> => {
   try {
     const request: AxiosResponse<LoginResponse> = await axiosInstance.post(
-      "/api/v1/auth/login",
+      "/auth/login",
       data
     );
     return request.data;

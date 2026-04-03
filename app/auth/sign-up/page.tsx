@@ -13,11 +13,14 @@ import { Button } from "@/components/ui/button";
 import registerApi from "@/lib/services/api/auth/register.api";
 import type { RegisterPayload } from "@/lib/services/api/auth/register.api";
 import useToastAlert from "@/lib/hooks/use-toast-alert";
+import { useAuth } from "@/lib/context/providers/auth-provider";
 
 const registerSchema = z
   .object({
-    fullname: z.string().min(1, "Full name is required"),
+    firstName: z.string().min(1, "First name is required"),
+    lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
+    phone: z.string().min(1, "Phone number is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
   })
@@ -30,6 +33,7 @@ type RegisterFormValues = z.infer<typeof registerSchema>;
 
 const SignUp: React.FC = () => {
   const router = useRouter();
+  const { login: authLogin } = useAuth();
   const { handleSuccessToast, handleErrorToast } = useToastAlert();
   const [isPending, setIsPending] = useState(false);
 
@@ -45,22 +49,37 @@ const SignUp: React.FC = () => {
     setIsPending(true);
     try {
       const payload: RegisterPayload = {
-        fullname: values.fullname,
+        firstName: values.firstName,
+        lastName: values.lastName,
         email: values.email,
+        phone: values.phone,
         password: values.password,
+        role: "user",
       };
 
       const response = await registerApi(payload);
 
       handleSuccessToast({
-        description:
-          "Registration successful! Please check your email to verify your account.",
+        description: "Registration successful!",
       });
 
-      // Redirect to verify email page
-      setTimeout(() => {
-        router.push("/auth/verify-email");
-      }, 1500);
+      // Auto-login with the returned token and user data
+      if (response.data.token) {
+        const userData = {
+          _id: response.data._id,
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          email: response.data.email,
+          role: response.data.role,
+          isVerified: response.data.isVerified,
+        };
+        authLogin(response.data.token, userData);
+      } else {
+        // Redirect to verify email page if no token returned
+        setTimeout(() => {
+          router.push("/auth/verify-email");
+        }, 1500);
+      }
     } catch (error: any) {
       handleErrorToast({
         description: error.message || "Failed to register. Please try again.",
@@ -78,15 +97,30 @@ const SignUp: React.FC = () => {
       >
         <div className="mb-2">
           <Input
-            label="Fullname"
+            label="First Name"
             type="text"
-            className={`py-6 border-[#9F9F9F] ${errors.fullname ? "border-red-500" : ""}`}
-            placeholder="Enter Your Full Name"
-            {...register("fullname")}
+            className={`py-6 border-[#9F9F9F] text-black ${errors.firstName ? "border-red-500" : ""}`}
+            placeholder="Enter your first name"
+            {...register("firstName")}
           />
-          {errors.fullname && (
+          {errors.firstName && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.fullname.message}
+              {errors.firstName.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
+            label="Last Name"
+            type="text"
+            className={`py-6 border-[#9F9F9F] text-black  ${errors.lastName ? "border-red-500" : ""}`}
+            placeholder="Enter your last name"
+            {...register("lastName")}
+          />
+          {errors.lastName && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.lastName.message}
             </p>
           )}
         </div>
@@ -95,7 +129,7 @@ const SignUp: React.FC = () => {
           <Input
             label="Email"
             type="email"
-            className={`py-6 border-[#9F9F9F] ${errors.email ? "border-red-500" : ""}`}
+            className={`py-6 border-[#9F9F9F] text-black ${errors.email ? "border-red-500" : ""}`}
             placeholder="Enter your email"
             {...register("email")}
           />
@@ -106,9 +140,22 @@ const SignUp: React.FC = () => {
 
         <div className="mb-2">
           <Input
+            label="Phone Number"
+            type="tel"
+            className={`py-6 border-[#9F9F9F] text-black ${errors.phone ? "border-red-500" : ""}`}
+            placeholder="Enter your phone number"
+            {...register("phone")}
+          />
+          {errors.phone && (
+            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
             label="Password"
             type="password"
-            className={`py-6 border-[#9F9F9F] ${errors.password ? "border-red-500" : ""}`}
+            className={`py-6 border-[#9F9F9F] text-black ${errors.password ? "border-red-500" : ""}`}
             placeholder="Create a password (min 8 characters)"
             {...register("password")}
           />
@@ -123,7 +170,7 @@ const SignUp: React.FC = () => {
           <Input
             label="Confirm Password"
             type="password"
-            className={`py-6 border-[#9F9F9F] ${errors.confirmPassword ? "border-red-500" : ""}`}
+            className={`py-6 border-[#9F9F9F] text-black ${errors.confirmPassword ? "border-red-500" : ""}`}
             placeholder="Confirm your password"
             {...register("confirmPassword")}
           />
