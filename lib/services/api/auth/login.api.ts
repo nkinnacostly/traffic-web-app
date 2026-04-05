@@ -5,6 +5,8 @@ import { ApiResponseType } from "@/lib/types";
 export interface LoginPayload {
   email: string;
   password: string;
+  deviceId: string;
+  role: string;
 }
 
 export interface LoginResponseData {

@@ -39,7 +39,14 @@ const SignIn: React.FC = () => {
   const onSubmit = async (values: LoginFormValues) => {
     setIsPending(true);
     try {
-      const response = await login(values as LoginPayload);
+      const payload: LoginPayload = {
+        email: values.email,
+        password: values.password,
+        deviceId: "12345",
+        role: "vendor",
+      };
+
+      const response = await login(payload);
 
       if (response.data.token) {
         const { token, ...userData } = response.data;
@@ -65,7 +72,7 @@ const SignIn: React.FC = () => {
           <Input
             label="Email"
             type="email"
-            className={`py-6 border-[#9F9F9F] ${errors.email ? "border-red-500" : ""}`}
+            className={`py-6 text-black border-[#9F9F9F] ${errors.email ? "border-red-500" : ""}`}
             placeholder="Enter Your Email"
             {...register("email")}
           />
@@ -78,7 +85,7 @@ const SignIn: React.FC = () => {
           <Input
             label="Password"
             type="password"
-            className={`py-6 border-[#9F9F9F] ${errors.password ? "border-red-500" : ""}`}
+            className={`py-6 text-black border-[#9F9F9F] ${errors.password ? "border-red-500" : ""}`}
             placeholder="Enter your Password"
             {...register("password")}
           />

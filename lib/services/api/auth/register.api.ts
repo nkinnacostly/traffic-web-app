@@ -7,7 +7,10 @@ export interface RegisterPayload {
   lastName: string;
   email: string;
   password: string;
-  phone: string;
+  phone: {
+    countryCode: string;
+    number: string;
+  };
   role: string;
 }
 

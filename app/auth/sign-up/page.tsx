@@ -20,6 +20,7 @@ const registerSchema = z
     firstName: z.string().min(1, "First name is required"),
     lastName: z.string().min(1, "Last name is required"),
     email: z.string().email("Invalid email address"),
+    countryCode: z.string().min(1, "Country code is required"),
     phone: z.string().min(1, "Phone number is required"),
     password: z.string().min(8, "Password must be at least 8 characters"),
     confirmPassword: z.string().min(1, "Please confirm your password"),
@@ -52,9 +53,12 @@ const SignUp: React.FC = () => {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
-        phone: values.phone,
+        phone: {
+          countryCode: values.countryCode,
+          number: values.phone,
+        },
         password: values.password,
-        role: "user",
+        role: "vendor",
       };
 
       const response = await registerApi(payload);
@@ -139,16 +143,36 @@ const SignUp: React.FC = () => {
         </div>
 
         <div className="mb-2">
-          <Input
-            label="Phone Number"
-            type="tel"
-            className={`py-6 border-[#9F9F9F] text-black ${errors.phone ? "border-red-500" : ""}`}
-            placeholder="Enter your phone number"
-            {...register("phone")}
-          />
-          {errors.phone && (
-            <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-          )}
+          <div className="flex gap-2">
+            <div className="w-32">
+              <Input
+                label="Country Code"
+                type="text"
+                className={`py-6 border-[#9F9F9F] text-black ${errors.countryCode ? "border-red-500" : ""}`}
+                placeholder="+234"
+                {...register("countryCode")}
+              />
+              {errors.countryCode && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.countryCode.message}
+                </p>
+              )}
+            </div>
+            <div className="flex-1">
+              <Input
+                label="Phone Number"
+                type="tel"
+                className={`py-6 border-[#9F9F9F] text-black ${errors.phone ? "border-red-500" : ""}`}
+                placeholder="Enter your phone number"
+                {...register("phone")}
+              />
+              {errors.phone && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.phone.message}
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
         <div className="mb-2">
