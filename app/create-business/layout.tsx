@@ -25,10 +25,12 @@ const CreateBusinessLayout: React.FC<CreateBusinessLayoutProps> = ({ children })
   }, [pathname]);
 
   return (
-    <div className="flex-none md:flex md:h-screen">
+    <div className="flex-none md:flex md:h-screen overflow-hidden">
       <Sidebar currentPath={pathname} completedSteps={completedSteps} /> {/* Pass current path and completed steps */}
-      <div className="w-full md:w-2/3 p-8">
-        {children}
+      <div className="w-full md:w-2/3 h-screen overflow-y-auto">
+        <div className="p-8">
+          {children}
+        </div>
       </div>
     </div>
   );

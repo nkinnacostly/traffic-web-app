@@ -18,7 +18,7 @@ export const Sidebar = ({ currentPath, completedSteps }: SideBarProps) => {
   ];
 
   return (
-    <aside className="hidden w-1/3 bg-gray-100 p-8 md:flex flex-col text-left">
+    <aside className="hidden w-1/3 bg-gray-100 p-8 md:flex flex-col text-left overflow-y-auto">
       <div className="mb-11 ml-5">
         <Image src={logoImage} height={100} width={200} alt="Logo Image" />
       </div>
@@ -26,21 +26,36 @@ export const Sidebar = ({ currentPath, completedSteps }: SideBarProps) => {
       <div className="space-y-6">
         {steps.map((step, index) => {
           const isCompleted = completedSteps.includes(step.path);
+          const isCurrent = currentPath === step.path;
 
           return (
             <div key={index}>
               <div className="p-5">
                 <div className="step flex items-center gap-5 mb-2">
-                  <div className={`w-6 h-6 rounded-full border ${isCompleted?'border-green-500' :''} flex items-center justify-center`}>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                    isCompleted ? 'border-green-500 bg-green-500' : 
+                    isCurrent ? 'border-blue-500 bg-blue-500' : 
+                    'border-gray-400'
+                  }`}>
                     {isCompleted ? (
-                     <IoMdCheckmark  className="text-green-500"/>
+                     <IoMdCheckmark className="text-white"/>
+                    ) : isCurrent ? (
+                      <div className="w-2 h-2 rounded-full bg-white" />
                     ) : (
-                      <IoMdCheckmark className="text-gray-300"/>
+                      <IoMdCheckmark className="text-gray-400"/>
                     )}
                   </div>
-                  <h2 className={` ${isCompleted?'text-[#030803] font-semibold' :'text-gray-300'}  text-lg`}>{step.label}</h2>
+                  <h2 className={`text-lg ${
+                    isCompleted ? 'text-gray-900 font-semibold' : 
+                    isCurrent ? 'text-gray-900 font-bold' : 
+                    'text-gray-500'
+                  }`}>{step.label}</h2>
                 </div>
-                <p className={`${isCompleted?'text-[#030803]' :'text-gray-300'} text-sm text-left ml-11`}>{step.sublabel}</p>
+                <p className={`text-sm text-left ml-11 ${
+                  isCompleted ? 'text-gray-700' : 
+                  isCurrent ? 'text-gray-700' : 
+                  'text-gray-400'
+                }`}>{step.sublabel}</p>
               </div>
             </div>
           );

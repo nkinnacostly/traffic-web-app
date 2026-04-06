@@ -10,27 +10,40 @@ import logoVector from "@/public/image/login-vector.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import useToastAlert from "@/lib/hooks/use-toast-alert";
+import completeSignup from "@/lib/services/api/vendors/complete-signup.api";
+import type { CompleteSignupPayload } from "@/lib/services/api/vendors/complete-signup.api";
 
 const businessFormSchema = z
   .object({
     businessName: z.string().min(1, "Business name is required"),
-    hasPhysicalLocation: z.enum(["yes", "no"]),
-    businessAddress: z.string().optional(),
-    cacNumber: z.string().min(1, "CAC number is required"),
+    physicalStore: z.enum(["yes", "no"]),
+    physicalStoreAddress: z.string().optional(),
+    businessEmail: z.string().email("Invalid business email"),
+    businessPhone: z.string().min(1, "Business phone is required"),
+    website: z.string().url("Invalid website URL").optional().or(z.literal("")),
+    description: z.string().min(1, "Business description is required"),
+    businessHours: z.string().min(1, "Business hours are required"),
+    businessCategory: z.string().min(1, "Business category is required"),
+    storeLogo: z.string().url("Invalid logo URL").optional().or(z.literal("")),
+    storeCoverPhoto: z
+      .string()
+      .url("Invalid cover photo URL")
+      .optional()
+      .or(z.literal("")),
   })
   .refine(
     (data) => {
       if (
-        data.hasPhysicalLocation === "yes" &&
-        (!data.businessAddress || data.businessAddress.trim() === "")
+        data.physicalStore === "yes" &&
+        (!data.physicalStoreAddress || data.physicalStoreAddress.trim() === "")
       ) {
         return false;
       }
       return true;
     },
     {
-      message: "Business address is required if you have a physical location",
-      path: ["businessAddress"],
+      message: "Business address is required if you have a physical store",
+      path: ["physicalStoreAddress"],
     },
   );
 
@@ -49,17 +62,34 @@ export default function BusinessForm() {
   } = useForm<BusinessFormValues>({
     resolver: zodResolver(businessFormSchema),
     defaultValues: {
-      hasPhysicalLocation: "no",
+      physicalStore: "no",
+      physicalStoreAddress: "",
+      website: "",
+      storeLogo: "",
+      storeCoverPhoto: "",
     },
   });
 
-  const hasPhysicalLocation = watch("hasPhysicalLocation");
+  const physicalStore = watch("physicalStore");
 
   const onSubmit = async (values: BusinessFormValues) => {
     setIsPending(true);
     try {
-      // TODO: Call API to create business
-      console.log("Business form data:", values);
+      const payload: CompleteSignupPayload = {
+        businessName: values.businessName,
+        physicalStore: values.physicalStore === "yes",
+        physicalStoreAddress: values.physicalStoreAddress || "",
+        businessEmail: values.businessEmail,
+        businessPhone: values.businessPhone,
+        website: values.website || "",
+        description: values.description,
+        businessHours: values.businessHours,
+        businessCategory: values.businessCategory,
+        storeLogo: values.storeLogo || "",
+        storeCoverPhoto: values.storeCoverPhoto || "",
+      };
+
+      await completeSignup(payload);
 
       handleSuccessToast({
         description: "Business details saved successfully!",
@@ -97,7 +127,7 @@ export default function BusinessForm() {
           <Input
             label="Business Name"
             placeholder="Enter Business name"
-            className={`border-black py-6 ${errors.businessName ? "border-red-500" : ""}`}
+            className={`border-black py-6 text-black ${errors.businessName ? "border-red-500" : ""}`}
             {...register("businessName")}
           />
           {errors.businessName && (
@@ -107,9 +137,81 @@ export default function BusinessForm() {
           )}
         </div>
 
+        <div className="mb-2">
+          <Input
+            label="Business Email"
+            type="email"
+            placeholder="Enter business email"
+            className={`border-black py-6 text-black ${errors.businessEmail ? "border-red-500" : ""}`}
+            {...register("businessEmail")}
+          />
+          {errors.businessEmail && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.businessEmail.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
+            label="Business Phone"
+            type="tel"
+            placeholder="Enter business phone (e.g., +2348012345678)"
+            className={`border-black py-6 text-black ${errors.businessPhone ? "border-red-500" : ""}`}
+            {...register("businessPhone")}
+          />
+          {errors.businessPhone && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.businessPhone.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
+            label="Business Description"
+            placeholder="Describe your business"
+            className={`border-black py-6 text-black ${errors.description ? "border-red-500" : ""}`}
+            {...register("description")}
+          />
+          {errors.description && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.description.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
+            label="Business Category"
+            placeholder="e.g., Electronics, Gadgets, Accessories"
+            className={`border-black py-6 text-black ${errors.businessCategory ? "border-red-500" : ""}`}
+            {...register("businessCategory")}
+          />
+          {errors.businessCategory && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.businessCategory.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
+            label="Business Hours"
+            placeholder="e.g., 09:00-21:00"
+            className={`border-black py-6 text-black ${errors.businessHours ? "border-red-500" : ""}`}
+            {...register("businessHours")}
+          />
+          {errors.businessHours && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.businessHours.message}
+            </p>
+          )}
+        </div>
+
         <div className="my-6">
           <h2 className="text-black text-sm mb-3">
-            Do you have a physical business location?
+            Do you have a physical store?
           </h2>
           <div className="flex gap-5 items-center">
             <div className="flex gap-3 items-center">
@@ -117,7 +219,7 @@ export default function BusinessForm() {
                 type="radio"
                 value="yes"
                 className="shadow-none w-4 border-black"
-                {...register("hasPhysicalLocation")}
+                {...register("physicalStore")}
               />
               <h4 className="text-black">Yes</h4>
             </div>
@@ -126,39 +228,70 @@ export default function BusinessForm() {
                 type="radio"
                 value="no"
                 className="shadow-none w-4 border-black"
-                {...register("hasPhysicalLocation")}
+                {...register("physicalStore")}
               />
               <h4 className="text-black">No</h4>
             </div>
           </div>
         </div>
 
-        {hasPhysicalLocation === "yes" && (
-          <div className="mb-6">
+        {physicalStore === "yes" && (
+          <div className="mb-2">
             <Input
-              label="If Yes, business Address"
-              placeholder="Enter business address"
-              className={`border-black py-6 ${errors.businessAddress ? "border-red-500" : ""}`}
-              {...register("businessAddress")}
+              label="Physical Store Address"
+              placeholder="Enter store address"
+              className={`border-black py-6 text-black ${errors.physicalStoreAddress ? "border-red-500" : ""}`}
+              {...register("physicalStoreAddress")}
             />
-            {errors.businessAddress && (
+            {errors.physicalStoreAddress && (
               <p className="text-red-500 text-sm mt-1">
-                {errors.businessAddress.message}
+                {errors.physicalStoreAddress.message}
               </p>
             )}
           </div>
         )}
 
+        <div className="mb-2">
+          <Input
+            label="Website (Optional)"
+            type="url"
+            placeholder="https://yourwebsite.com"
+            className={`border-black py-6 text-black ${errors.website ? "border-red-500" : ""}`}
+            {...register("website")}
+          />
+          {errors.website && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.website.message}
+            </p>
+          )}
+        </div>
+
+        <div className="mb-2">
+          <Input
+            label="Store Logo URL (Optional)"
+            type="url"
+            placeholder="https://images.example.com/logo.jpg"
+            className={`border-black py-6 text-black ${errors.storeLogo ? "border-red-500" : ""}`}
+            {...register("storeLogo")}
+          />
+          {errors.storeLogo && (
+            <p className="text-red-500 text-sm mt-1">
+              {errors.storeLogo.message}
+            </p>
+          )}
+        </div>
+
         <div className="mb-6">
           <Input
-            label="CAC Number"
-            placeholder="Enter cac number"
-            className={`border-black py-6 ${errors.cacNumber ? "border-red-500" : ""}`}
-            {...register("cacNumber")}
+            label="Store Cover Photo URL (Optional)"
+            type="url"
+            placeholder="https://images.example.com/cover.jpg"
+            className={`border-black py-6 text-black ${errors.storeCoverPhoto ? "border-red-500" : ""}`}
+            {...register("storeCoverPhoto")}
           />
-          {errors.cacNumber && (
+          {errors.storeCoverPhoto && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.cacNumber.message}
+              {errors.storeCoverPhoto.message}
             </p>
           )}
         </div>

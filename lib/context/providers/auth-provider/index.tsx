@@ -34,7 +34,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const initAuth = () => {
       if (typeof window !== "undefined") {
-        const storedToken = localStorage.getItem("token");
+        // Try to get token from localStorage or cookie
+        let storedToken = localStorage.getItem("token");
+
+        // If not in localStorage, try to get from cookie
+        if (!storedToken) {
+          const cookies = document.cookie.split(";");
+          const tokenCookie = cookies.find((c) =>
+            c.trim().startsWith("token="),
+          );
+          if (tokenCookie) {
+            storedToken = tokenCookie.split("=")[1];
+            // Sync to localStorage for consistency
+            localStorage.setItem("token", storedToken);
+          }
+        }
+
         const storedUser = localStorage.getItem("user");
 
         if (storedToken && storedUser) {
@@ -46,6 +61,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             // Invalid data, clear storage
             localStorage.removeItem("token");
             localStorage.removeItem("user");
+            document.cookie = "token=; path=/; max-age=0";
           }
         }
       }
@@ -59,18 +75,22 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (typeof window !== "undefined") {
       localStorage.setItem("token", newToken);
       localStorage.setItem("user", JSON.stringify(userData));
+      // Also set cookie for middleware
+      document.cookie = `token=${newToken}; path=/; max-age=86400; SameSite=Strict`;
     }
     setToken(newToken);
     setUser(userData);
 
-    // Redirect to dashboard or intended destination
-    router.push("/dashboard");
+    // Redirect to create business flow
+    router.push("/create-business/step1");
   };
 
   const logout = () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      // Also remove cookie
+      document.cookie = "token=; path=/; max-age=0";
     }
     setToken(null);
     setUser(null);
