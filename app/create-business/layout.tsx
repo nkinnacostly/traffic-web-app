@@ -1,13 +1,15 @@
-"use client"
+"use client";
 import { Sidebar } from "@/components/create-business/sidebar";
 import { ReactNode, useState, useEffect } from "react";
-import { usePathname } from 'next/navigation';
+import { usePathname } from "next/navigation";
 
 interface CreateBusinessLayoutProps {
-  children: ReactNode; 
+  children: ReactNode;
 }
 
-const CreateBusinessLayout: React.FC<CreateBusinessLayoutProps> = ({ children }) => {
+const CreateBusinessLayout: React.FC<CreateBusinessLayoutProps> = ({
+  children,
+}) => {
   const pathname = usePathname(); // Get the current path
   const [completedSteps, setCompletedSteps] = useState<string[]>([]); // State to track completed steps
 
@@ -20,17 +22,20 @@ const CreateBusinessLayout: React.FC<CreateBusinessLayoutProps> = ({ children })
     } else if (pathname === "/create-business/step3") {
       setCompletedSteps(["/create-business/step1", "/create-business/step2"]); // Step 1 and 2 completed
     } else if (pathname === "/create-business/step4") {
-      setCompletedSteps(["/create-business/step1", "/create-business/step2", "/create-business/step3"]); // Steps 1, 2, and 3 completed
+      setCompletedSteps([
+        "/create-business/step1",
+        "/create-business/step2",
+        "/create-business/step3",
+      ]); // Steps 1, 2, and 3 completed
     }
   }, [pathname]);
 
   return (
     <div className="flex-none md:flex md:h-screen overflow-hidden">
-      <Sidebar currentPath={pathname} completedSteps={completedSteps} /> {/* Pass current path and completed steps */}
+      <Sidebar currentPath={pathname} completedSteps={completedSteps} />{" "}
+      {/* Pass current path and completed steps */}
       <div className="w-full md:w-2/3 h-screen overflow-y-auto">
-        <div className="p-8">
-          {children}
-        </div>
+        <div className="p-8">{children}</div>
       </div>
     </div>
   );
