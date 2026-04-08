@@ -9,6 +9,7 @@ import { useState } from "react";
 import logoVector from "@/public/image/login-vector.png";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import FileUpload from "@/components/ui/file-upload";
 import useToastAlert from "@/lib/hooks/use-toast-alert";
 import completeSignup from "@/lib/services/api/vendors/complete-signup.api";
 import type { CompleteSignupPayload } from "@/lib/services/api/vendors/complete-signup.api";
@@ -58,6 +59,7 @@ export default function BusinessForm() {
     register,
     handleSubmit,
     watch,
+    setValue,
     formState: { errors },
   } = useForm<BusinessFormValues>({
     resolver: zodResolver(businessFormSchema),
@@ -267,12 +269,11 @@ export default function BusinessForm() {
         </div>
 
         <div className="mb-2">
-          <Input
-            label="Store Logo URL (Optional)"
-            type="url"
-            placeholder="https://images.example.com/logo.jpg"
-            className={`border-black py-6 text-black ${errors.storeLogo ? "border-red-500" : ""}`}
-            {...register("storeLogo")}
+          <FileUpload
+            label="Store Logo (Optional)"
+            value={watch("storeLogo")}
+            onChange={(url) => setValue("storeLogo", url)}
+            maxSizeMB={2}
           />
           {errors.storeLogo && (
             <p className="text-red-500 text-sm mt-1">
@@ -282,12 +283,11 @@ export default function BusinessForm() {
         </div>
 
         <div className="mb-6">
-          <Input
-            label="Store Cover Photo URL (Optional)"
-            type="url"
-            placeholder="https://images.example.com/cover.jpg"
-            className={`border-black py-6 text-black ${errors.storeCoverPhoto ? "border-red-500" : ""}`}
-            {...register("storeCoverPhoto")}
+          <FileUpload
+            label="Store Cover Photo (Optional)"
+            value={watch("storeCoverPhoto")}
+            onChange={(url) => setValue("storeCoverPhoto", url)}
+            maxSizeMB={5}
           />
           {errors.storeCoverPhoto && (
             <p className="text-red-500 text-sm mt-1">
